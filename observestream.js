@@ -8,16 +8,11 @@ var events = require('events'),
 
 module.exports = ObserveStream;
 function ObserveStream(scope, path, opts) {
-  Stream.Duplex.call(this, { objectMode: true });
-
-  if (typeof opts === 'undefined') {
-    opts = {
-      nextTurn: nextTurn,
-      observejs: false
-    };
-  }
+  if (typeof opts === 'undefined') opts = {};
   opts.nextTurn = opts.nextTurn || nextTurn;
   opts.observejs = opts.observejs || false;
+
+  Stream.Duplex.call(this, { objectMode: true });
 
   this.nextTurn = opts.nextTurn;
   this.observejs = opts.observejs;
