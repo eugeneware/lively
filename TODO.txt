@@ -1,0 +1,6 @@
+- Have some mock implementations of a server-side database
+- nodejs implementation over streams.
+- angularjs over socket.io/socks
+- browserify versions
+- sql versions using mysql proxy?
+- sql versions using triggers / stored-procedures?
