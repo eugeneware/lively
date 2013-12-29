@@ -39,7 +39,8 @@
     "changeset": "0.0.6",
     "clone": "~0.1.11",
     "errno": "~0.1.0",
-    "lodash.isequal": "~2.4.1"
+    "lodash.isequal": "~2.4.1",
+    "observejs": "0.0.2"
   },
   "devDependencies": {
     "expect.js": "~0.2.0",

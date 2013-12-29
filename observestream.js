@@ -3,19 +3,43 @@ var events = require('events'),
     inherits = require('util').inherits,
     diff = require('changeset'),
     clone = require('clone'),
+    observejs = require('observejs'),
     noop = function () {};
 
 module.exports = ObserveStream;
-function ObserveStream(scope, path) {
+function ObserveStream(scope, path, opts) {
   Stream.Duplex.call(this, { objectMode: true });
+
+  if (typeof opts === 'undefined') {
+    opts = {
+      nextTurn: nextTurn,
+      observejs: false
+    };
+  }
+  opts.nextTurn = opts.nextTurn || nextTurn;
+  opts.observejs = opts.observejs || false;
+
+  this.nextTurn = opts.nextTurn;
+  this.observejs = opts.observejs;
   this.scope = scope;
   this.path = path;
   this.old = clone(this.scope[this.path]);
 
   var self = this;
-  nextTurn(function () {
-    self.$digest();
-  });
+
+  if (opts.observejs) {
+    if (typeof this.scope[this.path] === 'undefined') {
+      this.scope[this.path] = {};
+    }
+    observejs.observe(this.scope)
+      .on('data', function(data) {
+        self.$digest();
+      });
+  } else {
+    this.nextTurn(function () {
+      self.$digest();
+    });
+  }
 }
 inherits(ObserveStream, Stream.Duplex);
 
@@ -38,9 +62,11 @@ ObserveStream.prototype.$digest = function () {
     this.old = new_;
     self.push({change: changes});
   }
-  nextTurn(function () {
-    self.$digest();
-  });
+  if (!this.observejs) {
+    this.nextTurn(function () {
+      self.$digest();
+    });
+  }
 };
 
 function nextTurn(fn) {
