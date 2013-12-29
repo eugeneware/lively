@@ -46,7 +46,7 @@ describe('Observe Stream', function() {
     });
   });
 
-  it.only('should be able to work with LiveStreams', function(done) {
+  it('should be able to work with LiveStreams', function(done) {
     var memdb = new MemLively();
     var ls = new LivelyStream(memdb, 'eugene', {});
     var obj = {};
@@ -56,7 +56,7 @@ describe('Observe Stream', function() {
     ls.pipe(os).pipe(ls);
 
     memdb.put('eugene', { name: 'Eugene', number: 42 }, noop);
-    setImmediate(checkValue);
+    setTimeout(checkValue, 50);
 
     function checkValue() {
       expect(obj).to.eql({ target: { name: 'Eugene', number: 42 } });

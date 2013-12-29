@@ -13,7 +13,7 @@ function ObserveStream(scope, path) {
   this.old = clone(this.scope[this.path]);
 
   var self = this;
-  setImmediate(function () {
+  nextTurn(function () {
     self.$digest();
   });
 }
@@ -27,6 +27,7 @@ ObserveStream.prototype._write = function (chunk, enc, cb) {
   } else if ('change' in chunk) {
     diff.apply(chunk.change, this.scope[this.path], true);
   }
+  cb();
 };
 
 ObserveStream.prototype.$digest = function () {
@@ -37,7 +38,12 @@ ObserveStream.prototype.$digest = function () {
     this.old = new_;
     self.push({change: changes});
   }
-  setImmediate(function () {
+  nextTurn(function () {
     self.$digest();
   });
 };
+
+function nextTurn(fn) {
+  //setImmediate(fn);
+  setTimeout(fn, 0);
+}
