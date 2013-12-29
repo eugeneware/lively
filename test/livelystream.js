@@ -6,11 +6,6 @@ var expect = require('expect.js'),
     diff = require('changeset'),
     noop = function () { };
 
-// var s = livelystream(memdb, 'key', {});
-// var obj;
-// var observerStream = observerStream(obj, 'key');
-// s.pipe(observerStream).pipe(s);
-
 describe('Lively Stream', function() {
   it('should be able to create a lively stream', function(done) {
     var memdb = new MemLively();
